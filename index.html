@@ -315,7 +315,11 @@ function loadText(text,name){
     return {i,name:h||'Column '+(i+1),visible:true,align:'auto',type,fmt:'auto',dec:-1,vis:'none',open:false};
   });
   state.cols.forEach(prep);
-  if(!opts.title&&state.fileName)opts.title=state.fileName.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  if(state.fileName){
+    const auto=state.fileName.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+    if(!opts.title||opts.title===state.autoTitle)opts.title=auto;
+    state.autoTitle=auto;
+  }
   syncControls();buildColPanel();render();
 }
 
