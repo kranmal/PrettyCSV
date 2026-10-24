@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PrettyCSV</title>
 <style id="mainCss">
-:root{--bg:#f4f5f8;--panel:#fff;--text:#16181d;--muted:#6b7280;--line:#e4e6eb;--surface:#fff;--ctl:#f1f2f5;--accent:#2563eb;--hbg:#1e3a8a;color-scheme:light}
-[data-mode=dark]{--bg:#0e1015;--panel:#161920;--text:#e8eaee;--muted:#9aa0ab;--line:#2a2f3a;--surface:#161920;--ctl:#212633;color-scheme:dark}
+:root{--bg:#f8ece5;--bg2:#f2dace;--blush:#D49A9A;--rose:#AA5E7A;--panel:rgba(255,255,255,.72);--text:#2b0d1a;--muted:#7a5566;--line:rgba(124,14,68,.16);--surface:#fffaf7;--ctl:rgba(124,14,68,.07);--accent:#7C0E44;--hbg:#7C0E44;color-scheme:light}
+[data-mode=dark]{--bg:#1a0912;--bg2:#2a0f1d;--blush:#D49A9A;--rose:#AA5E7A;--panel:rgba(48,20,34,.72);--text:#f6e6de;--muted:#c79aa8;--line:rgba(242,218,206,.16);--surface:#2a111e;--ctl:rgba(242,218,206,.08);color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+body{margin:0;color:var(--text);font:14px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:radial-gradient(900px 500px at 8% -10%,color-mix(in srgb,var(--blush) 45%,transparent),transparent 60%),radial-gradient(700px 420px at 100% 0%,color-mix(in srgb,var(--rose) 30%,transparent),transparent 60%),linear-gradient(var(--bg),var(--bg2));background-attachment:fixed}
 .app{display:grid;grid-template-columns:330px 1fr;height:100vh}
-.side{background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:16px}
+.side{background:var(--panel);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);border-right:1px solid var(--line);overflow:auto;padding:16px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;margin-bottom:14px}
-.brand i{width:28px;height:28px;border-radius:8px;background:var(--accent);display:grid;place-items:center;color:#fff;font-style:normal;font-size:15px}
+.brand i{width:30px;height:30px;border-radius:9px;background:linear-gradient(145deg,#AA5E7A,#7C0E44);box-shadow:0 2px 8px rgba(124,14,68,.35),inset 0 1px 0 rgba(255,255,255,.35);display:grid;place-items:center;color:#fff;font-style:normal;font-size:15px}
 .sec{border-top:1px solid var(--line);padding:4px 0}
 .sec>summary{cursor:pointer;font-weight:600;padding:10px 0;list-style:none;display:flex;justify-content:space-between}
 .sec>summary::after{content:"▾";color:var(--muted)}
@@ -31,6 +31,7 @@ input[type=text]{width:100%}
 .btn{background:var(--ctl);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
 .btn:hover{border-color:var(--accent)}
 .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+[data-mode=dark] .btn.primary{color:#2b0d1a}
 .btns{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .seg{display:inline-flex;background:var(--ctl);border-radius:8px;padding:2px;border:1px solid var(--line)}
 .seg button{border:0;background:none;color:var(--muted);padding:4px 10px;border-radius:6px;font:inherit;font-size:12.5px;cursor:pointer}
@@ -227,10 +228,10 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const root=document.documentElement;
 
-const THEMES={ocean:{a:'#2563eb',h:'#1e3a8a'},forest:{a:'#059669',h:'#065f46'},sunset:{a:'#ea580c',h:'#9a3412'},grape:{a:'#7c3aed',h:'#4c1d95'},rose:{a:'#e11d48',h:'#881337'},slate:{a:'#475569',h:'#334155'},mono:{a:'#111827',h:'#374151'}};
+const THEMES={wine:{a:'#7C0E44',h:'#7C0E44',d:'#D49A9A'},ocean:{a:'#2563eb',h:'#1e3a8a'},forest:{a:'#059669',h:'#065f46'},sunset:{a:'#ea580c',h:'#9a3412'},grape:{a:'#7c3aed',h:'#4c1d95'},rose:{a:'#e11d48',h:'#881337'},slate:{a:'#475569',h:'#334155'},mono:{a:'#111827',h:'#374151'}};
 const FONTS={sans:'system-ui,-apple-system,"Segoe UI",sans-serif',serif:'Georgia,"Times New Roman",serif',mono:'ui-monospace,SFMono-Regular,Menlo,monospace',round:'ui-rounded,"SF Pro Rounded","Nunito",system-ui,sans-serif'};
 const DENS={compact:[4,10],cozy:[8,14],roomy:[14,20]};
-const DEFAULTS={theme:'ocean',mode:'light',hs:'solid',hc:'none',font:'sans',fontSize:14,density:'cozy',lines:'rows',zebra:true,hover:true,wrap:false,rowNums:false,sticky:true,freeze:false,rounded:true,shadow:true,negRed:true,emptyDash:true,links:true,showMeta:true,totals:'none',title:'',pageSize:'100'};
+const DEFAULTS={theme:'wine',mode:'light',hs:'solid',hc:'none',font:'sans',fontSize:14,density:'cozy',lines:'rows',zebra:true,hover:true,wrap:false,rowNums:false,sticky:true,freeze:false,rounded:true,shadow:true,negRed:true,emptyDash:true,links:true,showMeta:true,totals:'none',title:'',pageSize:'100'};
 let opts={...DEFAULTS};
 try{if(matchMedia('(prefers-color-scheme: dark)').matches)opts.mode='dark'}catch(e){}
 try{Object.assign(opts,JSON.parse(localStorage.getItem('csvStudioOpts')||'{}'))}catch(e){}
@@ -464,9 +465,9 @@ function render(){
 function fmtNum2(v,c){return c.fmt==='auto'?(Math.round(v*100)/100).toLocaleString('en-US'):fmtNum(v,c)}
 
 function applyStyle(){
-  const t=THEMES[opts.theme]||THEMES.ocean;
+  const t=THEMES[opts.theme]||THEMES.wine;
   root.dataset.mode=opts.mode;$('#modeBtn').textContent=opts.mode==='dark'?'☀️':'🌙';
-  root.style.setProperty('--accent',t.a);root.style.setProperty('--hbg',t.h);
+  root.style.setProperty('--accent',opts.mode==='dark'&&t.d?t.d:t.a);root.style.setProperty('--hbg',t.h);
   const s=$('#sheet'),[py,px]=DENS[opts.density]||DENS.cozy;
   s.className=['tw','hs-'+opts.hs,'hc-'+opts.hc,'lines-'+opts.lines,opts.zebra&&'zebra',opts.hover&&'hover',opts.wrap&&'wrap',opts.sticky&&'sticky',opts.freeze&&'freeze',opts.rounded&&'rounded',opts.shadow&&'shadow'].filter(Boolean).join(' ');
   s.style.cssText=`--fs:${opts.fontSize}px;--py:${py}px;--px:${px}px;--ff:${FONTS[opts.font]||FONTS.sans}`;
@@ -651,7 +652,7 @@ function zip(files){
 const xe=s=>String(s).replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g,'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const colL=n=>{let s='';for(n++;n>0;n=Math.floor((n-1)/26))s=String.fromCharCode(65+(n-1)%26)+s;return s};
 $('#expXlsx').onclick=()=>{if(!need())return;
-  const vc=visCols(),view=getView(),hbg=(THEMES[opts.theme]||THEMES.ocean).h.slice(1).toUpperCase();
+  const vc=visCols(),view=getView(),hbg=(THEMES[opts.theme]||THEMES.wine).h.slice(1).toUpperCase();
   const widths=vc.map(c=>Math.min(60,Math.max(8,c.name.length+3)));
   let rows=`<row r="1">`+vc.map((c,k)=>`<c r="${colL(k)}1" s="1" t="inlineStr"><is><t>${xe(c.name)}</t></is></c>`).join('')+'</row>';
   view.forEach((ri,n)=>{
